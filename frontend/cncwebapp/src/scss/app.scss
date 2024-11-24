@@ -1,0 +1,152 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+// Include any default variable overrides here (though functions won't be available)
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+// Then add additional custom code here
+$cnc-blue: rgb(33, 111, 174);
+$cnc-green: rgb(58, 145, 63);
+$cnc-lime-green: rgb(173, 203, 31);
+$cnc-white: rgb(240, 240, 240);
+$cnc-white-seasalt: rgb(247, 247, 247);
+$jet-black: rgb(53, 53, 53);
+
+$primary: $cnc-lime-green;
+$secondary: $cnc-blue;
+
+$headings-color: $cnc-lime-green;
+$body-color: $jet-black;
+$btn-color: $jet-black;
+
+$colors: (
+    "cnc-white": rgb(247, 247, 247),
+    "cnc-blue": rgb(33, 111, 174),
+    "cnc-green": rgb(58, 145, 63),
+    "cnc-lime-green": rgb(173, 203, 31),
+    "jet-black": rgb(53, 53, 53)
+);
+
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "danger": $danger
+);
+
+
+/* SHADES */
+/* BLUE */
+.bg-blue {
+    background: $cnc-blue;
+}
+
+.bg-blue-lighter {
+    background: color-mix(in srgb, $cnc-blue, white 75%);
+}
+
+.bg-blue-light {
+    background: color-mix(in srgb, $cnc-blue, white);
+}
+
+.bg-blue-dark {
+    background: color-mix(in srgb, $cnc-blue, black 25%);
+}
+
+.bg-blue-darker {
+    background: color-mix(in srgb, $cnc-blue, black);
+}
+
+
+/* GREEN */
+.bg-green {
+    background: $cnc-green;
+}
+
+.bg-green-lighter {
+    background: color-mix(in srgb, $cnc-green, white 75%);
+}
+
+.bg-green-light {
+    background: color-mix(in srgb, $cnc-green, white);
+}
+
+.bg-green-dark {
+    background: color-mix(in srgb, $cnc-green, black 25%);
+}
+
+.bg-green-darker {
+    background: color-mix(in srgb, $cnc-green, black);
+}
+
+
+/* LIME GREEN */
+.bg-lime-green {
+    background: $cnc-lime-green;
+}
+
+.bg-lime-green-lighter {
+    background: color-mix(in srgb, $cnc-lime-green, white 75%);
+}
+
+.bg-lime-green-light {
+    background: color-mix(in srgb, $cnc-lime-green, white);
+}
+
+.bg-lime-green-dark {
+    background: color-mix(in srgb, $cnc-lime-green, black 25%);
+}
+
+.bg-lime-green-darker {
+    background: color-mix(in srgb, $cnc-lime-green, black);
+}
+
+.bg-white-seasalt {
+    background: $cnc-white-seasalt;
+}
+
+.blue {
+    color: $cnc-blue;
+}
+
+.green {
+    color: $cnc-green;
+}
+
+.lime-green {
+    color: $cnc-lime-green;
+}
+
+.white {
+    color: $cnc-white;
+}
+
+.black {
+    color: $jet-black;
+}
+
+
+.cnc-logo {
+    max-width: 25%;
+    min-width: 25%;
+}
+
+.cnc-app {
+    display: grid;
+    min-height: 100dvh;
+    grid-template-rows: auto 1fr auto;
+}
+
+$utilities: map-merge($utilities,
+        ("shadow-sm-end" : (property: box-shadow,
+                class: shadow-sm-end,
+                values: (null: 0.20rem 0rem 0.25rem rgba(0, 0, 0, 0.075)),
+            ),
+        ));
+
+
+// merge with existing $theme-colors map
+$theme-colors: map-merge($theme-colors, ("primary": $primary));
+
+// set changes
+@import "bootstrap";

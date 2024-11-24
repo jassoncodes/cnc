@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  cncapi:
+    image: cncapi_image
+    container_name: cncapi_container
+    build:
+      context: .
+      dockerfile: src/CNC.Api/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - 5050:5050
+      - 5055:5055
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:5055;http://+:5050
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=test
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - cncapi_vol:/https:ro
+
+  cncapp_db:
+    container_name: cncapp_postgresdb_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cncdb
+    volumes:
+      - cnc_db_vol:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  cncapi_vol:
+    name: cncapi_vol
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /src/CNC.Api/https
+  cnc_db_vol:
+    name: cnc_db_vol
