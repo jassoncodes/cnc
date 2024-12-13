@@ -96,6 +96,11 @@ public static class Extensions
         return new UserDto(appUser.UserName, appUser.Email, userToken);
     }
 
+    public static LoggedUserDto AsDto(this AppUser appUser)
+    {
+        return new LoggedUserDto(appUser.UserName, appUser.Email);
+    }
+
     public static void ApplyMigrations(this IApplicationBuilder app)
     {
 
@@ -118,8 +123,14 @@ public static class Extensions
     /// <param name="service"></param>
     public static void AddJwtSwagger(this IServiceCollection service)
     {
-        service.AddSwaggerGen(options =>
+        service.AddSwaggerGen(static options =>
         {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = AppDomain.CurrentDomain.FriendlyName,
+                Description = "CNC Web API"
+            });
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

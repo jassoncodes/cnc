@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+
         base.OnModelCreating(builder);
 
         List<IdentityRole> roles = new List<IdentityRole>{

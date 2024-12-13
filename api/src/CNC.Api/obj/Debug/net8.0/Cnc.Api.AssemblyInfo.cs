@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CNC.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe3cfd319789fd1f3b80fabe62aa7d08e31f4a99")]
 [assembly: System.Reflection.AssemblyProductAttribute("CNC.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CNC.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

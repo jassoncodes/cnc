@@ -9,7 +9,6 @@ using CNC.Api.Models.Entities;
 using CNC.Api.Interfaces;
 using CNC.Api.Services;
 using CNC.Api.Repository;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +20,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add services to the container.
 
-// begin jwt security block
+builder.Services.AddControllers();
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddJwtSwagger();
+
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+});
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+// begin jwt security block
+builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme =
@@ -31,8 +45,8 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme =
     options.DefaultSignInScheme =
     options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-
-}).AddJwtBearer(options =>
+})
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -47,41 +61,14 @@ builder.Services.AddAuthentication(options =>
     };
 
 });
-
-builder.Services.AddAuthorization();
-
-
-builder.Services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();
-
 // end jwt security block
 
-builder.Services.AddControllers();
+
 
 /* Service Injections */
 builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 builder.Services.AddScoped<ITokenService, TokenProvider>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
-
-builder.Services.AddSwaggerGen(option =>
-{
-    option.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = $"{builder.Environment.ApplicationName}",
-        Description = "CNC Web App API"
-    });
-});
-
-builder.Services.AddJwtSwagger();
-
-builder.Services.AddRouting(options =>
-{
-    options.LowercaseUrls = true;
-});
 
 builder.Services.AddCors(options =>
 {
@@ -90,7 +77,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:3000")
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         }
     );
 });
@@ -100,16 +88,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.ApplyMigrations();
+    // app.ApplyMigrations();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
-// Move up to development when final deploy
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1");
-    options.RoutePrefix = string.Empty;
-});
 
 app.UseHttpsRedirection();
 
@@ -117,9 +104,6 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// map identity api
-// app.MapIdentityApi<AppUser>();
 
 app.MapControllers();
 

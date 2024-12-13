@@ -13,6 +13,8 @@ public record UserDto(
     string token
 );
 
+public record LoggedUserDto(string userName, string email);
+
 
 public record RegisterUserDto
 (

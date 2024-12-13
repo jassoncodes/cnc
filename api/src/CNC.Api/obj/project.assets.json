@@ -8179,11 +8179,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Jay\\Desktop\\Proyecto CNC\\cnc_app\\api\\src\\CNC.Api\\CNC.Api.csproj",
+      "projectUniqueName": "C:\\Users\\Jay\\Desktop\\Proyecto CNC\\cnc_app\\api\\src\\CNC.Api\\CNC.Api.csproj",
       "projectName": "CNC.Api",
-      "projectPath": "c:\\Users\\Jay\\Desktop\\Proyecto CNC\\cnc_app\\api\\src\\CNC.Api\\CNC.Api.csproj",
+      "projectPath": "C:\\Users\\Jay\\Desktop\\Proyecto CNC\\cnc_app\\api\\src\\CNC.Api\\CNC.Api.csproj",
       "packagesPath": "C:\\Users\\Jay\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Jay\\Desktop\\Proyecto CNC\\cnc_app\\api\\src\\CNC.Api\\obj\\",
+      "outputPath": "C:\\Users\\Jay\\Desktop\\Proyecto CNC\\cnc_app\\api\\src\\CNC.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
