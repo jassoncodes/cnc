@@ -98,12 +98,8 @@ public class AccountController : ControllerBase
     {
         try
         {
-            if (empty != null)
-            {
-                await _signInManager.SignOutAsync();
-                return Ok($"User logged out");
-            }
-            return Unauthorized();
+            await _signInManager.SignOutAsync();
+            return Ok($"User logged out");
         }
         catch (Exception ex)
         {
