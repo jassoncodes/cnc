@@ -1,16 +1,11 @@
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using CNC.Api.Interfaces;
 using CNC.Api.Models.Dtos;
 using CNC.Api.Models.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CNC.Api.Controllers;
 
@@ -21,11 +16,13 @@ public class AccountController : ControllerBase
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly SignInManager<AppUser> _signInManager;
-    public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
+    private readonly IConfiguration _configuration;
+    public AccountController(IConfiguration configuration, UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _signInManager = signInManager;
+        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -35,7 +32,13 @@ public class AccountController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new
+                {
+                    Errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToList()
+                });
             }
 
             var appUser = new AppUser
@@ -55,23 +58,29 @@ public class AccountController : ControllerBase
                 }
                 else
                 {
-                    return StatusCode(500, roleResult.Errors);
+                    return StatusCode(500, new
+                    {
+                        Message = "No se pudo asignar el rol al usuario.",
+                        Errors = roleResult.Errors.Select(e => e.Description).ToList()
+                    });
                 }
             }
             else
             {
-                return StatusCode(500, createdUser.Errors);
+                return BadRequest(createdUser.Errors.Select(e => e.Description));
             }
         }
         catch (Exception e)
         {
-            return Problem(e.Message);
+            return Problem("Error interno en el servidor: ", e.Message);
         }
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
+        var expirationMinutes = Convert.ToDouble(_configuration["Jwt:ExpirationMinutes"]);
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -86,7 +95,11 @@ public class AccountController : ControllerBase
         var userToken = _tokenService.GenerateToken(user);
         Response.Cookies.Append("jwt", userToken, new CookieOptions
         {
-            HttpOnly = true
+            Path = "/",
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddMinutes(expirationMinutes)
         });
 
         return Ok(user.AsDto(userToken));
@@ -94,21 +107,27 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout()
+    public IActionResult Logout()
     {
         try
         {
-            await _signInManager.SignOutAsync();
-            return Ok($"User logged out");
+            var loggedIn = HttpContext.User.Identity.IsAuthenticated;
+            if (loggedIn)
+            {
+                // Eliminar la cookie 'jwt'
+                Response.Cookies.Delete("jwt");
+                return Ok("User logged out");
+            }
+            return BadRequest("No user logged in");
         }
         catch (Exception ex)
         {
-            return Problem($"An error ocurred: {ex.Message}");
+            return Problem($"An error occurred: {ex.Message}");
         }
     }
 
     [HttpGet("user")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public async Task<ActionResult<LoggedUserDto>> GetUser()
     {
         try

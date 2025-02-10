@@ -83,4 +83,7 @@ public class Paciente : IEntity
 
     [Column("fechaActualizacion")]
     public DateTimeOffset FechaActualizacion { get; set; }
+
+    [Column("numeroContratoAfiliado")]
+    public string NumeroContratoAfiliado { get; set; }
 }

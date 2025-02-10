@@ -3,7 +3,7 @@
 
 // Include any default variable overrides here (though functions won't be available)
 
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 // Then add additional custom code here
 $cnc-blue: rgb(33, 111, 174);
@@ -106,7 +106,7 @@ $theme-colors: (
 }
 
 .blue {
-    color: $cnc-blue;
+    color: $cnc-blue !important;
 }
 
 .green {
@@ -149,4 +149,4 @@ $utilities: map-merge($utilities,
 $theme-colors: map-merge($theme-colors, ("primary": $primary));
 
 // set changes
-@import "bootstrap";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";

@@ -9,6 +9,7 @@ using CNC.Api.Models.Entities;
 using CNC.Api.Interfaces;
 using CNC.Api.Services;
 using CNC.Api.Repository;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,30 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true
     };
 
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var jwtToken = context.Request.Cookies["jwt"];
+            if (!string.IsNullOrEmpty(jwtToken))
+            {
+                context.Token = jwtToken;
+            }
+            return Task.CompletedTask;
+        },
+        // OnTokenValidated = context =>
+        // {
+        //     // Aquí puedes agregar lógica adicional, como chequear si el token aún es válido en tu base de datos (por ejemplo, en caso de revocación)
+        //     return Task.CompletedTask;
+        // },
+        OnAuthenticationFailed = context =>
+        {
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync($"Authentication failed: {context.Exception.Message}");
+        }
+    };
+
 });
 // end jwt security block
 
@@ -72,15 +97,28 @@ builder.Services.AddScoped<ITokenService, TokenProvider>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
+    options.AddPolicy(
+        name: "http",
         policy =>
         {
             policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
         }
     );
+
+    options.AddPolicy(
+        name: "https",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        }
+    );
+
 });
 
 var app = builder.Build();
@@ -97,10 +135,23 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+if (app.Environment.IsProduction())
+{
+    // app.UseExceptionHandler("/error");
+    Console.WriteLine("******** Production environment ********");
+    app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+    // Remove on deploy:
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
-app.UseCors();
+app.UseCors("http");
+app.UseCors("https");
 
 app.UseAuthentication();
 app.UseAuthorization();

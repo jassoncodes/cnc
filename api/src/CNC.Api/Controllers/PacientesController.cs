@@ -12,7 +12,7 @@ namespace CNC.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Authorize]
+    // [Authorize]
     public class PacientesController : ControllerBase
     {
         private readonly IRepositoryService<Paciente> _pacienteRepository;
@@ -25,7 +25,7 @@ namespace CNC.Api.Controllers
 
         // GET: api/Pacientes
         [HttpGet]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes()
         {
 
@@ -87,6 +87,7 @@ namespace CNC.Api.Controllers
             pacienteExists.MedioContactoPreferido = actualizarPacienteDto.medioContactoPreferido;
             pacienteExists.FechaPrimeraConsulta = actualizarPacienteDto.fechaPrimeraConsulta;
             pacienteExists.NumeroAfiliadoARS = actualizarPacienteDto.numeroAfiliadoARS;
+            pacienteExists.NumeroContratoAfiliado = actualizarPacienteDto.numeroContratoAfiliado;
             pacienteExists.ContratoNSS = actualizarPacienteDto.contratoNSS;
             pacienteExists.Observacion = actualizarPacienteDto.observacion;
             pacienteExists.Estado = actualizarPacienteDto.estado;
@@ -124,6 +125,7 @@ namespace CNC.Api.Controllers
                 MedioContactoPreferido = crearPacienteDto.medioContactoPreferido,
                 FechaPrimeraConsulta = crearPacienteDto.fechaPrimeraConsulta,
                 NumeroAfiliadoARS = crearPacienteDto.numeroAfiliadoARS,
+                NumeroContratoAfiliado = crearPacienteDto.numeroContratoAfiliado,
                 ContratoNSS = crearPacienteDto.contratoNSS,
                 Observacion = crearPacienteDto.observacion,
                 Estado = "A",

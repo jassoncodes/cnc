@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CNC.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,7 +46,8 @@ namespace CNC.Api.Migrations
                     observacion = table.Column<string>(type: "text", nullable: true),
                     esado = table.Column<string>(type: "text", nullable: true),
                     fechaCreacion = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    fechaActualizacion = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    fechaActualizacion = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    numeroContratoAfiliado = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -217,8 +218,8 @@ namespace CNC.Api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "b043e585-b8be-4f35-9034-e31fcee6071c", null, "Admin", "ADMIN" },
-                    { "c1b733f4-68c9-48e6-8909-e881ba70d86e", null, "User", "USER" }
+                    { "002e41eb-c777-49e5-8b2f-8e7f1bc79ecd", null, "User", "USER" },
+                    { "33cecd77-7628-4ce6-a6b3-542d83e2f479", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

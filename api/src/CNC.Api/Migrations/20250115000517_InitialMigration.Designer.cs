@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CNC.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241121160501_Identity")]
-    partial class Identity
+    [Migration("20250115000517_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,6 +169,10 @@ namespace CNC.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("numeroAfiliadoARS");
 
+                    b.Property<string>("NumeroContratoAfiliado")
+                        .HasColumnType("text")
+                        .HasColumnName("numeroContratoAfiliado");
+
                     b.Property<string>("Observacion")
                         .HasColumnType("text")
                         .HasColumnName("observacion");
@@ -226,13 +230,13 @@ namespace CNC.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b043e585-b8be-4f35-9034-e31fcee6071c",
+                            Id = "33cecd77-7628-4ce6-a6b3-542d83e2f479",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c1b733f4-68c9-48e6-8909-e881ba70d86e",
+                            Id = "002e41eb-c777-49e5-8b2f-8e7f1bc79ecd",
                             Name = "User",
                             NormalizedName = "USER"
                         });

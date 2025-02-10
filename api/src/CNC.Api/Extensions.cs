@@ -30,6 +30,7 @@ public static class Extensions
                         paciente.MedioContactoPreferido,
                         paciente.FechaPrimeraConsulta,
                         paciente.NumeroAfiliadoARS,
+                        paciente.NumeroContratoAfiliado,
                         paciente.ContratoNSS,
                         paciente.Observacion,
                         paciente.Estado,

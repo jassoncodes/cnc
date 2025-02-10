@@ -23,6 +23,7 @@ public record PacienteDto(
     string medioContactoPreferido,
     string fechaPrimeraConsulta,
     string numeroAfiliadoARS,
+    string numeroContratoAfiliado,
     string contratoNSS,
     string observacion,
     string estado,
@@ -49,7 +50,9 @@ public record CrearPacienteDto(
     string sexo,
 
     [Required]
-    [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    // old dd/MM/yyyy [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    // new yyyy-mm-dd
+    [RegularExpression(@"\b[0-9]{4}-[0-9]{2}-[0-9]{2}\b",
         ErrorMessage = "La fecha debe estar en el formato dd/MM/yyyy.")]
     string fechaNacimiento,
 
@@ -78,12 +81,17 @@ public record CrearPacienteDto(
 
     string medioContactoPreferido,
 
-    [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    // old dd/MM/yyyy [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    // new yyyy-mm-dd
+    [RegularExpression(@"\b[0-9]{4}-[0-9]{2}-[0-9]{2}\b",
         ErrorMessage = "La fecha debe estar en el formato dd/MM/yyyy.")]
     string fechaPrimeraConsulta,
 
     [Required]
     string numeroAfiliadoARS,
+
+    [Required]
+    string numeroContratoAfiliado,
 
     [Required]
     string contratoNSS,
@@ -108,7 +116,8 @@ public record ActualizarPacienteDto(
     [Required]
     string sexo,
 
-    [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    // [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    [RegularExpression(@"\b[0-9]{4}-[0-9]{2}-[0-9]{2}",
         ErrorMessage = "La fecha debe estar en el formato dd/MM/yyyy.")]
     [Required]
     string fechaNacimiento,
@@ -140,12 +149,16 @@ public record ActualizarPacienteDto(
 
     string medioContactoPreferido,
 
-    [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    // [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
+    [RegularExpression(@"\b[0-9]{4}-[0-9]{2}-[0-9]{2}\b",
         ErrorMessage = "La fecha debe estar en el formato dd/MM/yyyy.")]
     string fechaPrimeraConsulta,
 
     [Required]
     string numeroAfiliadoARS,
+
+    [Required]
+    string numeroContratoAfiliado,
 
     [Required]
     string contratoNSS,

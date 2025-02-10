@@ -14,6 +14,7 @@ internal sealed class TokenProvider(IConfiguration configuration) : ITokenServic
     {
 
         string secretKey = configuration["Jwt:Secret"];
+        var expirationMinutes = Convert.ToDouble(configuration["Jwt:ExpirationMinutes"]);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
 
@@ -35,7 +36,7 @@ internal sealed class TokenProvider(IConfiguration configuration) : ITokenServic
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(10),
+            Expires = DateTime.UtcNow.AddMinutes(expirationMinutes),
             SigningCredentials = credentials,
             Issuer = configuration["Jwt:Issuer"],
             Audience = configuration["Jwt:Audience"]

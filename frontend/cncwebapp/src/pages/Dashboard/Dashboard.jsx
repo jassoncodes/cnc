@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap"
-import { SideBar } from "./components/SideBard"
 import { Outlet } from "react-router-dom"
+import { SideBar } from "../../components/SideBard"
 
 
 export const Dashboard = () =>
