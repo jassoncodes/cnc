@@ -15,7 +15,6 @@ export const Pacientes = ({ route }) =>
     const [pacienteById, setPacienteById] = useState();
     const [errors, setErrors] = useState("");
     const [isCreating, setIsCreating] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
 
     const getPacientes = async () =>
     {
@@ -66,18 +65,7 @@ export const Pacientes = ({ route }) =>
         const pacienteData = res.data;
         setPacienteById(pacienteData);
         setIsCreating(!isCreating);
-        console.log(res.data)
-    }
-
-    const handleSubmit = (isCreating) =>
-    {
-        if (isCreating)
-        {
-            console.log("esta creando un paciente");
-        } else
-        {
-            console.log("esta editando un paciente");
-        }
+        console.log("res.data: ", res.data)
     }
 
     const handleCancel = () =>
@@ -94,7 +82,6 @@ export const Pacientes = ({ route }) =>
     useEffect(() =>
     {
         getPacientes();
-
     }, [isCreating]);
 
 

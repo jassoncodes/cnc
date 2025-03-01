@@ -19,6 +19,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: "cnc_react",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:8000", "https://localhost:8000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+        }
+    );
+
+});
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -94,33 +111,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 builder.Services.AddScoped<ITokenService, TokenProvider>();
 
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        name: "http",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-        }
-    );
-
-    options.AddPolicy(
-        name: "https",
-        policy =>
-        {
-            policy.WithOrigins("https://localhost:3000")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-        }
-    );
-
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,7 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1 [Dev]");
         options.RoutePrefix = string.Empty;
     });
 }
@@ -139,19 +129,20 @@ if (app.Environment.IsProduction())
 {
     // app.UseExceptionHandler("/error");
     Console.WriteLine("******** Production environment ********");
-    app.UseHttpsRedirection();
 
     // Remove on deploy:
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", $"CNC API v1 [Production]");
         options.RoutePrefix = string.Empty;
     });
 }
 
-app.UseCors("http");
-app.UseCors("https");
+app.UseCors("cnc_react");
+
+app.UseRouting();
+
 
 app.UseAuthentication();
 app.UseAuthorization();
