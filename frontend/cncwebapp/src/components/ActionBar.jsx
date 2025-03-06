@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Container } from 'react-bootstrap';
 
-export const ActionBar = ({ onCreate, barTitle, barIcon }) =>
+export const ActionBar = ({ onCreate, barTitle, barIcon, createDisabled }) =>
 {
     return (
         <Navbar className="bg-body-tertiary rounded p-2 justify-content-between">
@@ -14,7 +14,7 @@ export const ActionBar = ({ onCreate, barTitle, barIcon }) =>
                 <h4><i className={barIcon}></i>&nbsp;{barTitle}</h4>
 
                 {/** Add button */}
-                <Button onClick={onCreate}>
+                <Button onClick={onCreate} disabled={createDisabled}>
                     <i className={`white ` + barIcon}></i>
                     <span className="white">
                         &nbsp;Agregar

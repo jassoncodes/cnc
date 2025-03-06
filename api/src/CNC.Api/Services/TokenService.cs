@@ -10,7 +10,7 @@ namespace CNC.Api.Services;
 internal sealed class TokenProvider(IConfiguration configuration) : ITokenService
 {
 
-    public string GenerateToken(AppUser user)
+    public string GenerateToken(AppUser user, List<string> roles)
     {
 
         string secretKey = configuration["Jwt:Secret"];
@@ -32,6 +32,11 @@ internal sealed class TokenProvider(IConfiguration configuration) : ITokenServic
             //Username holding the token
             new(JwtRegisteredClaimNames.Name, user.UserName.ToString())
         };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

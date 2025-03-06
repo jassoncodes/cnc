@@ -4,7 +4,7 @@ const api_host = import.meta.VITE_API_HOST;
 const api_port = import.meta.VITE_API_PORT;
 const api_root = import.meta.VITE_API_ROOT;
 
-const API_URL = `${api_host}:${api_port}/${api_root}`;
+const API_URL = `${api_host}:${api_port}${api_root}`;
 
 const Api = axios.create({
   baseURL: API_URL,

@@ -13,7 +13,11 @@ public record UserDto(
     string token
 );
 
-public record LoggedUserDto(string userName, string email);
+public record LoggedUserDto(
+    string userName,
+    string email,
+    List<string> role
+);
 
 
 public record RegisterUserDto
@@ -38,3 +42,10 @@ public record LoginDto(
     [Required]
     string password
 );
+
+
+public class AssignRoleDto
+{
+    public string userName { get; set; }
+    public string role { get; set; }
+}

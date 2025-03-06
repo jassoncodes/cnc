@@ -6,6 +6,7 @@ using CNC.Api.Interfaces;
 using CNC.Api.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace CNC.Api.Controllers
 {
@@ -154,6 +155,21 @@ namespace CNC.Api.Controllers
             await _pacienteRepository.DeleteAsync(paciente);
 
             return NoContent();
+        }
+
+        // PATCH: api/Pacientes/Disable/5
+        [HttpPatch("disable/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DisablePaciente(int id)
+        {
+            var paciente = await _pacienteRepository.GetByIdAsync(id);
+            if (paciente == null)
+            {
+                return NotFound();
+            }
+            paciente.Estado = "I";
+            await _pacienteRepository.UpdateAsync(paciente);
+            return Ok(new { message = "Se ha desactivado el paciente" });
         }
     }
 }
