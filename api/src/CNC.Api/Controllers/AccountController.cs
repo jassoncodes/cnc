@@ -5,6 +5,7 @@ using CNC.Api.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 namespace CNC.Api.Controllers;
@@ -48,27 +49,28 @@ public class AccountController : ControllerBase
             };
 
             var createdUser = await _userManager.CreateAsync(appUser, registerUserDto.password);
-            if (createdUser.Succeeded)
+            if (!createdUser.Succeeded)
             {
-                var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
-                if (roleResult.Succeeded)
+                return BadRequest(new
                 {
-                    var userToken = _tokenService.GenerateToken(appUser);
-                    return Ok(appUser.AsDto(userToken));
-                }
-                else
-                {
-                    return StatusCode(500, new
-                    {
-                        Message = "No se pudo asignar el rol al usuario.",
-                        Errors = roleResult.Errors.Select(e => e.Description).ToList()
-                    });
-                }
+                    Message = "No se pudo registrar al usuario",
+                    Description = createdUser.Errors.Select(e => e.Description).ToList()
+                });
             }
-            else
+
+            var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
+            if (!roleResult.Succeeded)
             {
-                return BadRequest(createdUser.Errors.Select(e => e.Description));
+                return StatusCode(500, new
+                {
+                    Message = "No se pudo asignar el rol al usuario.",
+                    Errors = roleResult.Errors.Select(e => e.Description).ToList()
+                });
             }
+
+            var roles = await _userManager.GetRolesAsync(appUser);
+            var userToken = _tokenService.GenerateToken(appUser, roles.ToList());
+            return Ok(appUser.AsDto(userToken));
         }
         catch (Exception e)
         {
@@ -87,12 +89,14 @@ public class AccountController : ControllerBase
         }
 
         var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == loginDto.userName.ToLower());
+        var roles = await _userManager.GetRolesAsync(user);
+
         if (user == null) return Unauthorized("Usuario no válido");
 
         var loggedIn = await _signInManager.CheckPasswordSignInAsync(user, loginDto.password, false);
         if (!loggedIn.Succeeded) return Unauthorized("Usuario no encontrado y/o contraseña incorrecta");
 
-        var userToken = _tokenService.GenerateToken(user);
+        var userToken = _tokenService.GenerateToken(user, roles.ToList());
         Response.Cookies.Append("jwt", userToken, new CookieOptions
         {
             Path = "/",
@@ -141,8 +145,11 @@ public class AccountController : ControllerBase
             //get the user from database
             var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == tokenUserId);
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+
             //convert to DTO
-            var userDto = user.AsDto();
+            var userDto = user.AsDto(roles.ToList());
 
             return Ok(userDto);
         }
@@ -150,6 +157,27 @@ public class AccountController : ControllerBase
         {
             return Problem($"An error ocurred: {ex.Message}");
         }
+    }
+
+
+    //  POST /api/account/assign-role
+    [HttpPost("assign-role")]
+    //[Authorize(Roles = "Admin")] // Opcional: Solo admins pueden asignar roles
+    public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto request)
+    {
+        var user = await _userManager.FindByNameAsync(request.userName);
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        var result = await _userManager.AddToRoleAsync(user, request.role);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok($"Role {request.role} assigned to {request.userName}");
     }
 
 }

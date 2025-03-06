@@ -9,7 +9,7 @@ namespace CNC.Api.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(AppUser user);
+        string GenerateToken(AppUser user, List<string> roles);
 
         JwtSecurityToken VerifyToken(string token);
     }

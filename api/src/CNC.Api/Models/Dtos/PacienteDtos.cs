@@ -53,7 +53,7 @@ public record CrearPacienteDto(
     // old dd/MM/yyyy [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
     // new yyyy-mm-dd
     [RegularExpression(@"\b[0-9]{4}-[0-9]{2}-[0-9]{2}\b",
-        ErrorMessage = "La fecha debe estar en el formato dd/MM/yyyy.")]
+        ErrorMessage = "La fecha debe estar en el formato yyyy-mm-dd.")]
     string fechaNacimiento,
 
     [Required]
@@ -84,7 +84,7 @@ public record CrearPacienteDto(
     // old dd/MM/yyyy [RegularExpression(@"\b(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{4})\b",
     // new yyyy-mm-dd
     [RegularExpression(@"\b[0-9]{4}-[0-9]{2}-[0-9]{2}\b",
-        ErrorMessage = "La fecha debe estar en el formato dd/MM/yyyy.")]
+        ErrorMessage = "La fecha debe estar en el formato yyyy-mm-dd.")]
     string fechaPrimeraConsulta,
 
     [Required]

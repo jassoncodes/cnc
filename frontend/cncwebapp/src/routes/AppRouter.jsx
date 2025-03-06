@@ -3,6 +3,7 @@ import { Dashboard } from "../pages/Dashboard/Dashboard"
 import { Pacientes } from "../pages/Pacientes/Pacientes"
 import { LoginPage } from "../pages/LoginPage/LoginPage"
 import { RegisterPage } from "../pages/RegisterPage/RegisterPage"
+import { HomePage } from "../pages/HomePage/HomePage"
 import App from "../App"
 import ProtectedRoute from "./ProtectedRoute"
 import { useAuth } from "../context/useAuth"
@@ -21,7 +22,9 @@ export const router = createBrowserRouter([
             {
                 path: "login",
                 element:
-                    <PublicRoute><LoginPage /></PublicRoute>
+                    <PublicRoute>
+                        <LoginPage />
+                    </PublicRoute>
             },
             { path: "register", element: <RegisterPage /> },
             {
@@ -32,7 +35,8 @@ export const router = createBrowserRouter([
                     </ProtectedRoute>
                 ),
                 children: [
-                    { path: "pacientes", element: <Pacientes route='pacientes' /> },
+                    { path: "", element: < HomePage /> },
+                    { path: "pacientes", element: <Pacientes /> },
                 ]
             },
         ]

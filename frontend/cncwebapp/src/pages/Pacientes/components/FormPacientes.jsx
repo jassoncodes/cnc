@@ -1,14 +1,16 @@
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { Button, Form } from "react-bootstrap";
+import { useEffect } from "react";
 
 export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = null }) =>
 {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
     const handleFormSubmit = (form) =>
     {
-        onSubmit(form); // Pasar los datos al componente padre
+        const formData = { ...form, id: editPaciente?.id }
+        onSubmit(formData); // Pasar los datos al componente padre
         reset(); // Reiniciar el formulario
     };
 
@@ -17,17 +19,37 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
         onDelete(editPaciente.id)
     }
 
+    useEffect(() =>
+    {
+        if (editPaciente)
+        {
+            Object.keys(editPaciente).forEach((key) =>
+            {
+                // console.log(key, ":", editPaciente[key])
+                setValue(key, editPaciente[key]);
+            });
+        } else
+        {
+            reset();
+        }
+    }, [editPaciente, setValue, reset]);
+
     return (
         <>
-            <h3>{editPaciente === null ? "Nuevo paciente" : "Datos del paciente"}</h3>
+            <h3>{editPaciente ? "Editar paciente" : "Nuevo paciente"}</h3>
             <Form onSubmit={handleSubmit(handleFormSubmit)}>
 
+                {editPaciente && (
+                    <Form.Group className="mb-3" controlId="id">
+                        <Form.Label>ID</Form.Label>
+                        <Form.Control type="text" disabled defaultValue={editPaciente.id} />
+                    </Form.Group>
+                )}
                 <Form.Group className="mb-3" controlId="expediente">
                     <Form.Label>Expediente</Form.Label>
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el expediente"
-                        defaultValue={editPaciente ? editPaciente.expediente : ""}
                         {...register("expediente", { required: "Este campo es obligatorio" })}
                     />
                     {errors.expediente && <p className="text-danger">{errors.expediente.message}</p>}
@@ -37,7 +59,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese la cédula"
-                        defaultValue={editPaciente ? editPaciente.cedula : ""}
                         {...register("cedula", { required: "Este campo es obligatorio" })}
                     />
                     {errors.cedula && <p className="text-danger">{errors.cedula.message}</p>}
@@ -47,7 +68,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el nombre"
-                        defaultValue={editPaciente ? editPaciente.nombre : ""}
                         {...register("nombre", { required: "Este campo es obligatorio" })}
                     />
                     {errors.nombre && <p className="text-danger">{errors.nombre.message}</p>}
@@ -57,19 +77,20 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el apellido"
-                        defaultValue={editPaciente ? editPaciente.apellido : ""}
                         {...register("apellido", { required: "Este campo es obligatorio" })}
                     />
                     {errors.apellido && <p className="text-danger">{errors.apellido.message}</p>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="sexo">
                     <Form.Label>Sexo</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Ingrese el sexo"
-                        defaultValue={editPaciente ? editPaciente.sexo : ""}
+                    <Form.Select
+                        defaultChecked={editPaciente.sexo === "M" ? "M" : "F"}
                         {...register("sexo", { required: "Este campo es obligatorio" })}
-                    />
+                    >
+                        <option value="">Seleccione una opción</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </Form.Select>
                     {errors.sexo && <p className="text-danger">{errors.sexo.message}</p>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="fechaNacimiento">
@@ -77,7 +98,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="date"
                         placeholder="Ingrese la fecha de nacimiento"
-                        defaultValue={editPaciente ? editPaciente.fechaNacimiento : ""}
                         {...register("fechaNacimiento", { required: "Este campo es obligatorio" })}
                     />
                     {errors.fechaNacimiento && <p className="text-danger">{errors.fechaNacimiento.message}</p>}
@@ -87,7 +107,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el estado civil"
-                        defaultValue={editPaciente ? editPaciente.estadoCivil : ""}
                         {...register("estadoCivil", { required: "Este campo es obligatorio" })}
                     />
                     {errors.estadoCivil && <p className="text-danger">{errors.estadoCivil.message}</p>}
@@ -97,7 +116,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el nivel académico"
-                        defaultValue={editPaciente ? editPaciente.nivelAcademico : ""}
                         {...register("nivelAcademico", { required: "Este campo es obligatorio" })}
                     />
                     {errors.nivelAcademico && <p className="text-danger">{errors.nivelAcademico.message}</p>}
@@ -107,7 +125,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese la religión"
-                        defaultValue={editPaciente ? editPaciente.religion : ""}
                         {...register("religion", { required: "Este campo es obligatorio" })}
                     />
                     {errors.religion && <p className="text-danger">{errors.religion.message}</p>}
@@ -117,7 +134,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el tutor/cuidador"
-                        defaultValue={editPaciente ? editPaciente.tutorCuidador : ""}
                         {...register("tutorCuidador", { required: "Este campo es obligatorio" })}
                     />
                     {errors.tutorCuidador && <p className="text-danger">{errors.tutorCuidador.message}</p>}
@@ -127,7 +143,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el teléfono"
-                        defaultValue={editPaciente ? editPaciente.telefono : ""}
                         {...register("telefono", { required: "Este campo es obligatorio" })}
                     />
                     {errors.telefono && <p className="text-danger">{errors.telefono.message}</p>}
@@ -137,7 +152,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el celular"
-                        defaultValue={editPaciente ? editPaciente.celular : ""}
                         {...register("celular", { required: "Este campo es obligatorio" })}
                     />
                     {errors.celular && <p className="text-danger">{errors.celular.message}</p>}
@@ -147,7 +161,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el teléfono de trabajo"
-                        defaultValue={editPaciente ? editPaciente.telefonoTrabajo : ""}
                         {...register("telefonoTrabajo", { required: "Este campo es obligatorio" })}
                     />
                     {errors.telefonoTrabajo && <p className="text-danger">{errors.telefonoTrabajo.message}</p>}
@@ -157,7 +170,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese la dirección"
-                        defaultValue={editPaciente ? editPaciente.direccion : ""}
                         {...register("direccion", { required: "Este campo es obligatorio" })}
                     />
                     {errors.direccion && <p className="text-danger">{errors.direccion.message}</p>}
@@ -167,7 +179,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el motivo de consulta"
-                        defaultValue={editPaciente ? editPaciente.motivoConsulta : ""}
                         {...register("motivoConsulta", { required: "Este campo es obligatorio" })}
                     />
                     {errors.motivoConsulta && <p className="text-danger">{errors.motivoConsulta.message}</p>}
@@ -177,7 +188,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="email"
                         placeholder="Ingrese el correo electrónico"
-                        defaultValue={editPaciente ? editPaciente.correoElectronico : ""}
                         {...register("correoElectronico", { required: "Este campo es obligatorio" })}
                     />
                     {errors.correoElectronico && <p className="text-danger">{errors.correoElectronico.message}</p>}
@@ -187,7 +197,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el medio de contacto preferido"
-                        defaultValue={editPaciente ? editPaciente.medioContactoPreferido : ""}
                         {...register("medioContactoPreferido", { required: "Este campo es obligatorio" })}
                     />
                     {errors.medioContactoPreferido && <p className="text-danger">{errors.medioContactoPreferido.message}</p>}
@@ -197,7 +206,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="date"
                         placeholder="Ingrese la fecha de primera consulta"
-                        defaultValue={editPaciente ? editPaciente.fechaPrimeraConsulta : ""}
                         {...register("fechaPrimeraConsulta", { required: "Este campo es obligatorio" })}
                     />
                     {errors.fechaPrimeraConsulta && <p className="text-danger">{errors.fechaPrimeraConsulta.message}</p>}
@@ -207,7 +215,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el número de afiliado ARS"
-                        defaultValue={editPaciente ? editPaciente.numeroAfiliadoARS : ""}
                         {...register("numeroAfiliadoARS", { required: "Este campo es obligatorio" })}
                     />
                     {errors.numeroAfiliadoARS && <p className="text-danger">{errors.numeroAfiliadoARS.message}</p>}
@@ -217,7 +224,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el número de contrato/afiliado"
-                        defaultValue={editPaciente ? editPaciente.numeroContratoAfiliado : ""}
                         {...register("numeroContratoAfiliado", { required: "Este campo es obligatorio" })}
                     />
                     {errors.numeroAfiliadoARS && <p className="text-danger">{errors.numeroAfiliadoARS.message}</p>}
@@ -227,7 +233,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese el contrato NSS"
-                        defaultValue={editPaciente ? editPaciente.contratoNSS : ""}
                         {...register("contratoNSS", { required: "Este campo es obligatorio" })}
                     />
                     {errors.contratoNSS && <p className="text-danger">{errors.contratoNSS.message}</p>}
@@ -237,11 +242,29 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Control
                         type="text"
                         placeholder="Ingrese la observación"
-                        defaultValue={editPaciente ? editPaciente.observacion : ""}
                         {...register("observacion", { required: "Este campo es obligatorio" })}
                     />
                     {errors.observacion && <p className="text-danger">{errors.observacion.message}</p>}
                 </Form.Group>
+                {
+                    editPaciente &&
+                    <Form.Group className="mb-3" controlId="estado">
+                        <Form.Label>Estado</Form.Label>
+                        <Form.Select
+                            defaultChecked={editPaciente.estado === "A" ? "A" : "I"}
+                            {...register("estado")}
+                        >
+                            <option value="">Seleccione una opción</option>
+                            <option value="A">Activo</option>
+                            <option value="I">Inactivo</option>
+                        </Form.Select>
+                        {/* <Form.Control
+                            type="text"
+                            defaultValue={editPaciente.estado}
+                            {...register("estado")}
+                        /> */}
+                    </Form.Group>
+                }
                 <div className="d-flex justify-content-between">
                     <Button variant="secondary" onClick={onCancel}>
                         Cancelar
@@ -262,4 +285,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
 FormPacientes.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    editPaciente: PropTypes.object
 };

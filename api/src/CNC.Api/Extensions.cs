@@ -97,9 +97,9 @@ public static class Extensions
         return new UserDto(appUser.UserName, appUser.Email, userToken);
     }
 
-    public static LoggedUserDto AsDto(this AppUser appUser)
+    public static LoggedUserDto AsDto(this AppUser appUser, List<string> roles)
     {
-        return new LoggedUserDto(appUser.UserName, appUser.Email);
+        return new LoggedUserDto(appUser.UserName, appUser.Email, roles);
     }
 
     public static void ApplyMigrations(this IApplicationBuilder app)
