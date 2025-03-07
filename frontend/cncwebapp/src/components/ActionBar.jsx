@@ -7,11 +7,7 @@ import Col from 'react-bootstrap/Col';
 import { Container } from 'react-bootstrap';
 import { Search } from './Search';
 
-<<<<<<< HEAD
 export const ActionBar = ({ onCreate, barTitle, barIcon, createDisabled, onSearch }) =>
-=======
-export const ActionBar = ({ onCreate, barTitle, barIcon, createDisabled }) =>
->>>>>>> 24d9102dbc4f5fdbe5c1f2c8db6581baff7df0bf
 {
     return (
         <Navbar className="bg-body-tertiary rounded p-2 justify-content-between">

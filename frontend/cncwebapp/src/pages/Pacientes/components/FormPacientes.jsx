@@ -85,27 +85,12 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     <Form.Label>Sexo</Form.Label>
                     <Form.Select
                         defaultChecked={editPaciente.sexo === "M" ? "M" : "F"}
-<<<<<<< HEAD
                         {...register("sexo", { required: "Este campo es obligatorio" })}
                     >
                         <option value="">Seleccione una opción</option>
                         <option value="M">Masculino</option>
                         <option value="F">Femenino</option>
                     </Form.Select>
-=======
-                        {...register("sexo", { required: "Este campo es obligatorio" })}
-                    >
-                        <option value="">Seleccione una opción</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                    </Form.Select>
-                    {/* <Form.Control
-                        type="text"
-                        placeholder="Ingrese el sexo"
-                        defaultValue={editPaciente ? editPaciente.sexo : ""}
-                        {...register("sexo", { required: "Este campo es obligatorio" })}
-                    /> */}
->>>>>>> 24d9102dbc4f5fdbe5c1f2c8db6581baff7df0bf
                     {errors.sexo && <p className="text-danger">{errors.sexo.message}</p>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="fechaNacimiento">
@@ -265,7 +250,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     editPaciente &&
                     <Form.Group className="mb-3" controlId="estado">
                         <Form.Label>Estado</Form.Label>
-<<<<<<< HEAD
                         <Form.Select
                             defaultChecked={editPaciente.estado === "A" ? "A" : "I"}
                             {...register("estado")}
@@ -279,13 +263,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                             defaultValue={editPaciente.estado}
                             {...register("estado")}
                         /> */}
-=======
-                        <Form.Control
-                            type="text"
-                            defaultValue={editPaciente.estado}
-                            {...register("estado")}
-                        />
->>>>>>> 24d9102dbc4f5fdbe5c1f2c8db6581baff7df0bf
                     </Form.Group>
                 }
                 <div className="d-flex justify-content-between">
