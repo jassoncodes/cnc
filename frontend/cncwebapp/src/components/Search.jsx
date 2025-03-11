@@ -1,20 +1,16 @@
 import { Form } from "react-bootstrap"
 
 
-export const Search = ({ onSearch }) =>
+export const Search = ({ onSearch, searchValue }) =>
 {
-
-    const handleChange = (searchValue) =>
-    {
-        onSearch(searchValue)
-    }
 
     return (
         <Form.Control
             type="text"
             placeholder="Search"
             className=" mr-sm-2"
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => onSearch(e.target.value)}
+            value={searchValue}
         />
     )
 }

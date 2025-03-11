@@ -14,9 +14,13 @@ import { json } from "react-router-dom";
 export const Pacientes = () =>
 {
     const [pacientes, setPacientes] = useState([]);
-    const [pacienteById, setPacienteById] = useState([]);
+    const [searchVal, setSearchVal] = useState([]);
+    const [initPacientes, setInitPacientes] = useState([]);
+
+    const [pacienteById, setPacienteById] = useState({});
     const [errors, setErrors] = useState("");
     const [formMode, setFormMode] = useState("")
+    const [searching, setSearching] = useState(false);
     // const [isCreating, setIsCreating] = useState(false);
     // const [isEditing, setIsEdigint] = useState(false);
 
@@ -94,19 +98,17 @@ export const Pacientes = () =>
     const clear = () =>
     {
         setFormMode("");
-        setPacienteById(prev => []);
+        setPacienteById({});
     }
 
     const handleDoubleClick = async (elementClicked) =>
     {
 
         setFormMode("edit");
+        setSearchVal("")
         const res = await getPacientesByIdAsync(elementClicked);
         const pacienteData = res.data;
-        setPacienteById(prev =>
-        {
-            return pacienteData;
-        });
+        setPacienteById(prev => pacienteData);
     }
 
     const handleCancel = async () =>
@@ -135,27 +137,34 @@ export const Pacientes = () =>
 
     const handleSearch = (searchValue) =>
     {
-        if (Array.from(searchValue).length >= 3)
+        setSearchVal(searchValue);
+        if (searchValue.length >= 3)
         {
-            console.log("Buscando: ", searchValue)
-        }
-        console.log(pacientes)
 
-        //change map for something else
-        const filteredData = pacientes.map((paciente) =>
+            const searchLower = searchValue.toLowerCase();
+
+            const filteredData = pacientes.filter((paciente) => paciente.nombre.toLowerCase().includes(searchLower));
+
+            setPacientes(filteredData);
+            setSearching(false);
+        } else
         {
-            if (String(paciente.nombre).includes(searchValue))
-            {
-                return paciente
-            }
-        })
-        console.log(filteredData)
+            setPacientes(prev => initPacientes);
+        }
     }
 
     useEffect(() =>
     {
         getPacientes();
     }, [formMode]);
+
+    useEffect(() =>
+    {
+        if (pacientes.length > 0 && initPacientes.length === 0)
+        {
+            setInitPacientes(pacientes);
+        }
+    }, [pacientes]);
 
 
     return (
@@ -166,6 +175,7 @@ export const Pacientes = () =>
                 onCreate={() => setFormMode("create")}
                 createDisabled={formMode ? true : false}
                 onSearch={handleSearch}
+                searchVal={searchVal}
             />
             {
                 formMode /** "edit" or "create" **/ ? (

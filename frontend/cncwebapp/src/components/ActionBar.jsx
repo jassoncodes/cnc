@@ -7,11 +7,11 @@ import Col from 'react-bootstrap/Col';
 import { Container } from 'react-bootstrap';
 import { Search } from './Search';
 
-export const ActionBar = ({ onCreate, barTitle, barIcon, createDisabled, onSearch }) =>
+export const ActionBar = ({ onCreate, barTitle, barIcon, createDisabled, onSearch, searchVal }) =>
 {
     return (
         <Navbar className="bg-body-tertiary rounded p-2 justify-content-between">
-            <div className="d-flex gap-3">
+            <div className="d-flex gap-3 align-items">
                 <h4><i className={barIcon}></i>&nbsp;{barTitle}</h4>
 
                 {/** Add button */}
@@ -26,7 +26,7 @@ export const ActionBar = ({ onCreate, barTitle, barIcon, createDisabled, onSearc
             <Form inline="true">
                 <Row>
                     <Col xs="auto">
-                        <Search onSearch={onSearch} />
+                        <Search onSearch={onSearch} searchValue={searchVal} />
                     </Col>
                 </Row>
             </Form>

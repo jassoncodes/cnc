@@ -258,11 +258,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                             <option value="A">Activo</option>
                             <option value="I">Inactivo</option>
                         </Form.Select>
-                        {/* <Form.Control
-                            type="text"
-                            defaultValue={editPaciente.estado}
-                            {...register("estado")}
-                        /> */}
                     </Form.Group>
                 }
                 <div className="d-flex justify-content-between">
