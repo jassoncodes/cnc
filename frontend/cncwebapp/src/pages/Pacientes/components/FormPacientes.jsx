@@ -2,16 +2,25 @@ import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { Button, Form } from "react-bootstrap";
 import { useEffect } from "react";
+import { ESTADO_CIVIL_OPTIONS_F, ESTADO_CIVIL_OPTIONS_M, RELIGION, NIVEL_ACADEMICO } from "../datos";
+import { formatDateTime } from "../../../utils";
 
 export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = null }) =>
 {
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm();
+    const sexoSelection = watch("sexo", "");
+
+    const estadoCivilOptions = sexoSelection === "M"
+        ? ESTADO_CIVIL_OPTIONS_M
+        : sexoSelection === "F"
+            ? ESTADO_CIVIL_OPTIONS_F
+            : [{ value: "", label: "Seleccione una opción en el campo sexo" }];
 
     const handleFormSubmit = (form) =>
     {
         const formData = { ...form, id: editPaciente?.id }
-        onSubmit(formData); // Pasar los datos al componente padre
-        reset(); // Reiniciar el formulario
+        onSubmit(formData);
+        reset();
     };
 
     const handleDelete = () =>
@@ -25,7 +34,6 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
         {
             Object.keys(editPaciente).forEach((key) =>
             {
-                // console.log(key, ":", editPaciente[key])
                 setValue(key, editPaciente[key]);
             });
         } else
@@ -84,7 +92,7 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                 <Form.Group className="mb-3" controlId="sexo">
                     <Form.Label>Sexo</Form.Label>
                     <Form.Select
-                        defaultChecked={editPaciente.sexo === "M" ? "M" : "F"}
+                        defaultChecked={editPaciente ? (editPaciente.sexo === "M" ? "M" : "F") : ""}
                         {...register("sexo", { required: "Este campo es obligatorio" })}
                     >
                         <option value="">Seleccione una opción</option>
@@ -104,29 +112,45 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="estadoCivil">
                     <Form.Label>Estado Civil</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Ingrese el estado civil"
+                    <Form.Select
+                        defaultChecked=""
                         {...register("estadoCivil", { required: "Este campo es obligatorio" })}
-                    />
+                        disabled={!sexoSelection}
+                    >
+                        {
+                            estadoCivilOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))
+                        }
+                    </Form.Select>
                     {errors.estadoCivil && <p className="text-danger">{errors.estadoCivil.message}</p>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="nivelAcademico">
                     <Form.Label>Nivel Académico</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Ingrese el nivel académico"
+                    <Form.Select
                         {...register("nivelAcademico", { required: "Este campo es obligatorio" })}
-                    />
+                    >
+                        {NIVEL_ACADEMICO.map((nivel) => (
+                            <option key={nivel.value} value={nivel.value}>
+                                {nivel.label}
+                            </option>
+                        ))}
+                    </Form.Select>
                     {errors.nivelAcademico && <p className="text-danger">{errors.nivelAcademico.message}</p>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="religion">
                     <Form.Label>Religión</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Ingrese la religión"
+                    <Form.Select
                         {...register("religion", { required: "Este campo es obligatorio" })}
-                    />
+                    >
+                        {RELIGION.map((religion) => (
+                            <option key={religion.value} value={religion.value}>
+                                {religion.label}
+                            </option>
+                        ))}
+                    </Form.Select>
                     {errors.religion && <p className="text-danger">{errors.religion.message}</p>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="tutorCuidador">
@@ -247,7 +271,7 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                     {errors.observacion && <p className="text-danger">{errors.observacion.message}</p>}
                 </Form.Group>
                 {
-                    editPaciente &&
+                    editPaciente.estado &&
                     <Form.Group className="mb-3" controlId="estado">
                         <Form.Label>Estado</Form.Label>
                         <Form.Select

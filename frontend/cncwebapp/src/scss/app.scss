@@ -1,6 +1,13 @@
 
 // Include any default variable overrides here (though functions won't be available)
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+// @import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/helpers";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/utilities";
+
 
 // Then add additional custom code here
 $cnc-blue: rgb(33, 111, 174);
@@ -136,12 +143,22 @@ $theme-colors: (
     grid-template-rows: auto 1fr auto;
 }
 
-$utilities: map-merge($utilities,
-        ("shadow-sm-end" : (property: box-shadow,
+$utilities: map-merge(
+    $utilities,
+    (
+        "shadow-sm-end" : (
+                property: box-shadow,
                 class: shadow-sm-end,
-                values: (null: 0.20rem 0rem 0.25rem rgba(0, 0, 0, 0.075)),
-            ),
-        ));
+                values: (default: 0.20rem 0rem 0.25rem rgba(0, 0, 0, 0.075)),
+        ),
+        "min-vh": (
+                property: min-height,
+                class: min-vh,
+                responsive: true,
+                values: (75: 75vh)
+        )
+    )
+);
 
 
 // merge with existing $theme-colors map

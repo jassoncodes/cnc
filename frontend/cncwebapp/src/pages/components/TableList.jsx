@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react"
 import { Table } from "react-bootstrap"
-import { capitalize, formatDateTime } from "../utils";
 
 
 export const TableList = ({ onDoubleClick, tableHeaders, tableValues }) =>

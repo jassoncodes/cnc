@@ -1,8 +1,8 @@
 import PropTypes, { string } from "prop-types";
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap"
-import { TableList } from "../../components/TableList";
-import { ActionBar } from "../../components/ActionBar";
+import { TableList } from "../components/TableList";
+import { ActionBar } from "../components/ActionBar";
 import { getPacientesAsync, createPacienteAsync, getPacientesByIdAsync, updatePacienteAsync, deactivatePacienteAsync } from "../../services/PacientesService";
 import { FormPacientes } from "./components/FormPacientes";
 import { toast } from "react-toastify";
@@ -43,6 +43,7 @@ export const Pacientes = () =>
 
         } catch (error)
         {
+            toast.error(`${error}`)
             setErrors(`${error}`)
         }
     }
@@ -59,7 +60,7 @@ export const Pacientes = () =>
             toast.success(`Se ha registrado al paciente \n${patientData.nombre} ${patientData.apellido}`)
         } catch (error)
         {
-            setErrors(`${error}`);
+            toast.error(`${error}`)
         }
     }
 
@@ -72,10 +73,10 @@ export const Pacientes = () =>
             {
                 throw new Error("No se pudo actualizar el paciente: ");
             }
-            toast.success(`Se ha editado la informacion del pciente \n${pacientData.nombre} ${pacientData.apellido}`)
+            toast.success(`Se ha actualizaddo la informacion del paciente \n${pacientData.nombre} ${pacientData.apellido}`)
         } catch (error)
         {
-            setErrors(`${error}`);
+            toast.error(`${error}`)
         }
     }
 
@@ -91,7 +92,7 @@ export const Pacientes = () =>
             toast.success(response.data.message);
         } catch (error)
         {
-            setErrors(`${error}`);
+            toast.error(`${error}`)
         }
     }
 
@@ -143,7 +144,18 @@ export const Pacientes = () =>
 
             const searchLower = searchValue.toLowerCase();
 
-            const filteredData = pacientes.filter((paciente) => paciente.nombre.toLowerCase().includes(searchLower));
+            const filteredData = pacientes.filter((paciente) =>
+            {
+                const pacientesPorNombre = paciente.nombre.toLowerCase().includes(searchLower)
+                const pacientesPorApellido = paciente.apellido.toLowerCase().includes(searchLower)
+                if (pacientesPorNombre)
+                {
+                    return pacientesPorNombre;
+                } else
+                {
+                    return pacientesPorApellido;
+                }
+            });
 
             setPacientes(filteredData);
             setSearching(false);

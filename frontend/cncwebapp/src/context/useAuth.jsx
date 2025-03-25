@@ -70,11 +70,18 @@ export const UserProvider = ({ children }) =>
             }).catch((e) => toast.warning("Server error occurred"));
     }
 
+    /**
+     * Function to validate if user is logged in
+     * @returns 
+     */
     const isLoggedIn = () =>
     {
         return !!user;
     }
 
+    /**
+     * Logs out user by removing token and user info from local storage
+     */
     const logout = () =>
     {
         localStorage.removeItem("token");
