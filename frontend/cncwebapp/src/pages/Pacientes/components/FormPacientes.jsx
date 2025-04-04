@@ -44,6 +44,7 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
 
     return (
         <>
+            {console.log(editPaciente)}
             <h3>{editPaciente ? "Editar paciente" : "Nuevo paciente"}</h3>
             <Form onSubmit={handleSubmit(handleFormSubmit)}>
 
@@ -92,7 +93,7 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                 <Form.Group className="mb-3" controlId="sexo">
                     <Form.Label>Sexo</Form.Label>
                     <Form.Select
-                        defaultChecked={editPaciente ? (editPaciente.sexo === "M" ? "M" : "F") : ""}
+                        defaultChecked={editPaciente ?? editPaciente.sexo}
                         {...register("sexo", { required: "Este campo es obligatorio" })}
                     >
                         <option value="">Seleccione una opción</option>
@@ -113,7 +114,7 @@ export const FormPacientes = ({ onSubmit, onCancel, onDelete, editPaciente = nul
                 <Form.Group className="mb-3" controlId="estadoCivil">
                     <Form.Label>Estado Civil</Form.Label>
                     <Form.Select
-                        defaultChecked=""
+                        defaultChecked={editPaciente ?? editPaciente.estadoCivil}
                         {...register("estadoCivil", { required: "Este campo es obligatorio" })}
                         disabled={!sexoSelection}
                     >
